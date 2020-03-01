@@ -170,4 +170,6 @@ public class ProductSell implements Serializable {
     public void setPurchaserPhone(String purchaserPhone) {
         this.purchaserPhone = purchaserPhone;
     }
+
+
 }

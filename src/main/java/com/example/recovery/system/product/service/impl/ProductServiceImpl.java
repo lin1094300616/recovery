@@ -67,7 +67,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public Map update(Product product) {
         Product oldProduct = productMapper.findProduct(product.getProductId());
-        if (oldProduct.getProductId().equals(product.getProductId())) {
+        if (oldProduct == null || oldProduct.getProductId().equals(product.getProductId())) {
             if(productMapper.update(product) == 1) {
                 ProductSell sell = sellMapper.findProduct(product.getProductId());
                 sell.setName(product.getName());

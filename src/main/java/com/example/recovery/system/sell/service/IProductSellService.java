@@ -15,10 +15,10 @@ import java.util.Map;
  * @since 2020-02-29
  */
 public interface IProductSellService extends IService<ProductSell> {
-    
-    Map add(ProductSell productSell);
 
-    Map delete(Integer productId);
+//    Map add(ProductSell productSell);
+//
+//    Map delete(Integer productId);
 
     Map update(ProductSell productSell);
 

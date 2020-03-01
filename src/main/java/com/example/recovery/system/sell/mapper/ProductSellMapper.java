@@ -40,7 +40,7 @@ public interface ProductSellMapper extends BaseMapper<ProductSell> {
 
     @Update("update product_sell set name = #{name}, purchase_price = #{purchasePrice}, price = #{price}, " +
             "stock = #{stock}, unit = #{unit}, min_price = #{minPrice}, min_unit_stock = #{minUnitStock}, " +
-            "min_unit = #{minUnit},stock_date = #{stock_date} purchaser = #{purchaser}, " +
+            "min_unit = #{minUnit},stock_date = #{stockDate}, purchaser = #{purchaser}, " +
             "purchaser_phone = #{purchaserPhone} " +
             "where product_id = #{productId} ")
     int update(ProductSell productSell);
