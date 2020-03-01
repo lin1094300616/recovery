@@ -28,12 +28,16 @@ public class PageUtil {
         for(Map.Entry<String, String> entry : queryMap.entrySet()){
             String mapKey = entry.getKey();
             String mapValue = entry.getValue();
+
             //如果key 后缀有Like 则表示该字段模糊查询
-            if (mapKey.endsWith("Like")) {
-                //写入之前先去除后缀的Like
-                queryWrapper.like(mapKey.substring(0,mapKey.length()-4),mapValue);
+            if (mapKey.endsWith("_like")) {
+                //写入之前先去除后缀的_like
+                queryWrapper.like(mapKey.substring(0,mapKey.length()-5),mapValue);
+            }else if ((mapValue == null) || (mapValue.equals(""))) {
+                //如果不是模糊查询，且value 为null 或 "", 不添加查询条件
+                continue;
             }else {
-                //无Like 则表示该字段精确查询
+                //无Like 且value 不为null 或"" ,则表示该字段精确查询
                 queryWrapper.eq(mapKey,mapValue);
             }
         }
