@@ -1,6 +1,7 @@
 package com.example.recovery.system.sell.controller;
 
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2020-02-29
  */
 @RestController
-@RequestMapping("/sell/product-sell")
+@RequestMapping("/sell")
+@CrossOrigin
 public class ProductSellController {
 
 }

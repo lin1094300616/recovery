@@ -28,6 +28,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/epidemic")
+@CrossOrigin
 public class EpidemicController {
 
     @Autowired
