@@ -20,13 +20,25 @@ import java.util.List;
 @Mapper
 public interface EpidemicMapper extends BaseMapper<Epidemic> {
 
+    @Select("select * " +
+            "from epidemic " +
+            "where area_number = #{higherAreaNumber} " +
+            "and date = #{date}")
+    Epidemic findEpidemicByAreaNumber(Epidemic epidemic);
+
     /**
      * 条件构造器查询
      * @param wrapper
      * @return
      */
-    @Select("select * from epidemic ${ew.customSqlSegment}")
+    @Select("select *, from epidemic ${ew.customSqlSegment}")
     List<Epidemic> getAll(@Param(Constants.WRAPPER) QueryWrapper wrapper);
+
+    @Update("update epidemic set confirmed = confirmed + #{confirmed}, suspected = suspected + #{suspected}, " +
+            "death = death + #{death}, cured = cured + #{cured} " +
+            "where area_number = #{areaNumber} " +
+            "and date = #{date} ")
+    int update3(Epidemic epidemic);
 
     @Update("update epidemic set confirmed = confirmed + #{confirmed}, suspected = suspected + #{suspected}, " +
             "death = death + #{death}, cured = cured + #{cured} " +
@@ -34,7 +46,8 @@ public interface EpidemicMapper extends BaseMapper<Epidemic> {
             "and date = '0' ")
     int update2(Epidemic epidemic);
 
-    @Insert("INSERT INTO epidemic VALUES (#{epidemicId}, #{province}, #{date}, #{confirmed}, #{suspected}, #{death}, #{cured})")
+    @Insert("INSERT INTO epidemic VALUES (#{epidemicId}, #{province}, #{area_number}, #{higher_area_number}， " +
+            "#{date}, #{confirmed}, #{suspected}, #{death}, #{cured})")
     @Options(useGeneratedKeys = true, keyColumn = "epidemicId", keyProperty = "epidemicId")
     int add(Epidemic epidemic);
 
@@ -46,12 +59,12 @@ public interface EpidemicMapper extends BaseMapper<Epidemic> {
     @Delete("delete from epidemic where epidemic_id = #{epidemicId}")
     int delete(Integer epidemicId);
 
-    @Select("select epidemic_id, province, date, confirmed, suspected, death, cured " +
+    @Select("select * " +
             "from epidemic " +
             "where epidemic_id = #{epidemicId}")
     Epidemic findEpidemic(@Param("epidemicId") Integer epidemicId);
 
-    @Select("select epidemic_id, province, date, confirmed, suspected, death, cured " +
+    @Select("select epidemic_id, province, area_number, higher_area_number, date, confirmed, suspected, death, cured " +
             "from epidemic")
     List<Epidemic> findEpidemicList();
 }

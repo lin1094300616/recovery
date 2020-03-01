@@ -24,13 +24,18 @@ public class Epidemic implements Serializable {
      * 疫情ID
      */
     private Integer epidemicId;
-
-
+    /**
+     * 地区行政编码
+     */
+    private Integer areaNumber;
+    /**
+     * 上级地区行政编码
+     */
+    private Integer higherAreaNumber;
     /**
      * 省份
      */
     private String province;
-
     /**
      * 日期
      */
@@ -56,13 +61,24 @@ public class Epidemic implements Serializable {
      */
     private Integer cured = 0;
 
-
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
-    }
-
     public Integer getEpidemicId() {
         return epidemicId;
+    }
+
+    public Integer getAreaNumber() {
+        return areaNumber;
+    }
+
+    public void setAreaNumber(Integer areaNumber) {
+        this.areaNumber = areaNumber;
+    }
+
+    public Integer getHigherAreaNumber() {
+        return higherAreaNumber;
+    }
+
+    public void setHigherAreaNumber(Integer higherAreaNumber) {
+        this.higherAreaNumber = higherAreaNumber;
     }
 
     public void setEpidemicId(Integer epidemicId) {

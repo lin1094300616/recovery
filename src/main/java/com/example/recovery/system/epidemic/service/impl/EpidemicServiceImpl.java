@@ -29,11 +29,55 @@ public class EpidemicServiceImpl extends ServiceImpl<EpidemicMapper, Epidemic> i
     @Resource
     EpidemicMapper epidemicMapper;
 
+    static  Epidemic cumulativeEpidemic = new Epidemic();
+
+    /**
+     * 添加—— 上级地区修改（累加相应的值）
+     * 修改—— 修改的值和原值做比较，修改上级地区
+     *
+     * 上级行政地区递归方法，判断当前地区上级地区是否存在（是否为0）
+     * 存在则调用递归修改
+     */
+    @Transactional(rollbackFor=Exception.class)
+    public boolean updateArea(Epidemic epidemic) {
+        try{
+            if (epidemic.getHigherAreaNumber() == 0){
+                epidemic.setDate("0");
+                epidemicMapper.update3(epidemic);
+                return true;
+            }
+            Epidemic updateEpidemic = epidemicMapper.findEpidemicByAreaNumber(epidemic);
+            updateEpidemic.setConfirmed(cumulativeEpidemic.getConfirmed());
+            updateEpidemic.setSuspected(cumulativeEpidemic.getSuspected());
+            updateEpidemic.setDeath(cumulativeEpidemic.getDeath());
+            updateEpidemic.setCured(cumulativeEpidemic.getCured());
+            epidemicMapper.update3(updateEpidemic);
+            return updateArea(updateEpidemic);
+        }catch (Exception e) {
+            System.out.println("e = " + e);
+        }
+        return false;
+    }
+
+    /**
+     * 计算出每一项需要 相加/减少的人数
+     * @param oldEpidemic
+     * @param newEpidemic
+     * @return
+     */
+//    public void getDifference(Epidemic oldEpidemic, Epidemic newEpidemic) {
+//        cumulativeEpidemic.setConfirmed(newEpidemic.getConfirmed() - oldEpidemic.getConfirmed());
+//        cumulativeEpidemic.setSuspected(newEpidemic.getSuspected() - oldEpidemic.getSuspected());
+//        cumulativeEpidemic.setDeath(newEpidemic.getDeath() - oldEpidemic.getDeath());
+//        cumulativeEpidemic.setCured(newEpidemic.getCured() - oldEpidemic.getCured());
+//    }
+
     @Override
     @Transactional
     public Map add(Epidemic epidemic) {
-        if(epidemicMapper.add(epidemic) == 1) {
-            epidemicMapper.update2(epidemic);
+        if((epidemicMapper.add(epidemic) == 1) && (epidemic.getHigherAreaNumber() != 0)) {
+            //添加疫情的情况下，直接使用当前值进行递归调用
+            updateArea(epidemic);
             return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
         }else {
             return  ResponseMap.factoryResult(StatusEnum.RET_INSERT_FAIL.getCode(),StatusEnum.RET_INSERT_FAIL.getData());
@@ -44,12 +88,15 @@ public class EpidemicServiceImpl extends ServiceImpl<EpidemicMapper, Epidemic> i
     @Transactional
     public Map update(Epidemic epidemic) {
         Epidemic oldEpidemic = epidemicMapper.findEpidemic(epidemic.getEpidemicId());
-        if (epidemicMapper.update(epidemic) == 1) {
-            epidemic.setConfirmed(epidemic.getConfirmed() - oldEpidemic.getConfirmed());
-            epidemic.setSuspected(epidemic.getSuspected() - oldEpidemic.getSuspected());
-            epidemic.setDeath(epidemic.getDeath() - oldEpidemic.getDeath());
-            epidemic.setCured(epidemic.getCured() - oldEpidemic.getCured());
-            if (epidemicMapper.update2(epidemic) == 1) {
+        //直接修改最高级行政地区，不循环调用
+        if ((epidemicMapper.update(epidemic) == 1) && (epidemic.getHigherAreaNumber() != 0)) {
+            //抽出方法，计算每项需要相加的值，return epidemic；
+            cumulativeEpidemic.setConfirmed(epidemic.getConfirmed() - oldEpidemic.getConfirmed());
+            cumulativeEpidemic.setSuspected(epidemic.getSuspected() - oldEpidemic.getSuspected());
+            cumulativeEpidemic.setDeath(epidemic.getDeath() - oldEpidemic.getDeath());
+            cumulativeEpidemic.setCured(epidemic.getCured() - oldEpidemic.getCured());
+            //调用递归修改，循环修改到最上级行政地区
+            if (updateArea(epidemic)) {
                 return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
             }
         }
