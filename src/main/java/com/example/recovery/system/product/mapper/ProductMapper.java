@@ -34,7 +34,7 @@ public interface ProductMapper extends BaseMapper<Product> {
 
     @Insert("INSERT INTO `product` VALUES (#{productId}, #{name}, #{component}, #{description}, " +
             "#{adverseReactions}, #{indications}, #{dosageAdministration}, #{contraindications}, " +
-            "#{precautions}, #{pack}, #{storage}, #{otc}, #{type} )")
+            "#{precautions}, #{pack}, #{storage}, #{otc}, #{type}, #{brand}, #{origin} )")
     @Options(useGeneratedKeys = true, keyColumn = "productId", keyProperty = "productId")
     int add(Product product);
 
@@ -42,21 +42,20 @@ public interface ProductMapper extends BaseMapper<Product> {
             "description = #{description}, adverse_reactions = #{adverseReactions}, " +
             "indications = #{indications}, dosage_administration = #{dosageAdministration}, " +
             "contraindications = #{contraindications}, precautions = #{precautions}, " +
-            "pack = #{pack}, storage = #{storage}, otc = #{otc}, type = #{type} " +
+            "pack = #{pack}, storage = #{storage}, otc = #{otc}, type = #{type}, " +
+            "brand = #{brand}, origin = #{origin} " +
             "where product_id = #{productId} ")
     int update(Product product);
 
     @Delete("delete from product where product_id = #{productId}")
     int delete(Integer productId);
 
-    @Select("select product_id, name, component, description, adverse_reactions, indications, " +
-            "dosage_administration, contraindications, precautions, pack, storage, otc, type " +
+    @Select("select *" +
             "from product " +
             "where product_id = #{productId}")
     Product findProduct(@Param("productId") Integer productId);
 
-    @Select("select product_id, name, component, description, adverse_reactions, indications, " +
-            "dosage_administration, contraindications, precautions, pack, storage, otc, type " +
+    @Select("select *" +
             "from product ")
     List<Product> findProductList();
 

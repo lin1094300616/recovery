@@ -99,7 +99,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     public Map findByPage(@RequestParam(value = "page") Integer page,
                           @RequestParam(value = "size") Integer size) {
         //分页并查询

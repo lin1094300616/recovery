@@ -56,7 +56,7 @@ public class ProductController {
         return productService.findById(productId);
     }
 
-    @GetMapping("/page")
+    @PostMapping("/page")
     public Map query(@RequestBody Map<String,String> queryMap) {
         //获取分页信息，并从查询条件中去除
         Integer page = Integer.valueOf(queryMap.get("page"));
