@@ -43,9 +43,9 @@ public class Product extends ProductSell implements Serializable {
     private String description;
 
     /**
-     * 药理作用
+     * 不良反应 adverseReactions
      */
-    private String pharmacologicalAction;
+    private String adverseReactions;
 
     /**
      * 功能主治
@@ -87,18 +87,26 @@ public class Product extends ProductSell implements Serializable {
      */
     private String type;
 
+    private String brand;
+
+    private String origin;
+
+    @Override
     public Integer getProductId() {
         return productId;
     }
 
+    @Override
     public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -119,12 +127,28 @@ public class Product extends ProductSell implements Serializable {
         this.description = description;
     }
 
-    public String getPharmacologicalAction() {
-        return pharmacologicalAction;
+    public String getAdverseReactions() {
+        return adverseReactions;
     }
 
-    public void setPharmacologicalAction(String pharmacologicalAction) {
-        this.pharmacologicalAction = pharmacologicalAction;
+    public void setAdverseReactions(String adverseReactions) {
+        this.adverseReactions = adverseReactions;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     public String getIndications() {

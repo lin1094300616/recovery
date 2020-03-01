@@ -33,13 +33,13 @@ public interface ProductMapper extends BaseMapper<Product> {
     Product findProductByName(@Param("name") String name);
 
     @Insert("INSERT INTO `product` VALUES (#{productId}, #{name}, #{component}, #{description}, " +
-            "#{pharmacologicalAction}, #{indications}, #{dosageAdministration}, #{contraindications}, " +
+            "#{adverseReactions}, #{indications}, #{dosageAdministration}, #{contraindications}, " +
             "#{precautions}, #{pack}, #{storage}, #{otc}, #{type} )")
     @Options(useGeneratedKeys = true, keyColumn = "productId", keyProperty = "productId")
     int add(Product product);
 
     @Update("update product set name = #{name},component = #{component}," +
-            "description = #{description}, pharmacological_action = #{pharmacologicalAction}, " +
+            "description = #{description}, adverse_reactions = #{adverseReactions}, " +
             "indications = #{indications}, dosage_administration = #{dosageAdministration}, " +
             "contraindications = #{contraindications}, precautions = #{precautions}, " +
             "pack = #{pack}, storage = #{storage}, otc = #{otc}, type = #{type} " +
@@ -49,13 +49,13 @@ public interface ProductMapper extends BaseMapper<Product> {
     @Delete("delete from product where product_id = #{productId}")
     int delete(Integer productId);
 
-    @Select("select product_id, name, component, description, pharmacological_action, indications, " +
+    @Select("select product_id, name, component, description, adverse_reactions, indications, " +
             "dosage_administration, contraindications, precautions, pack, storage, otc, type " +
             "from product " +
             "where product_id = #{productId}")
     Product findProduct(@Param("productId") Integer productId);
 
-    @Select("select product_id, name, component, description, pharmacological_action, indications, " +
+    @Select("select product_id, name, component, description, adverse_reactions, indications, " +
             "dosage_administration, contraindications, precautions, pack, storage, otc, type " +
             "from product ")
     List<Product> findProductList();
