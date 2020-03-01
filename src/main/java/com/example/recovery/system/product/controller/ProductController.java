@@ -56,6 +56,11 @@ public class ProductController {
         return productService.findById(productId);
     }
 
+    @GetMapping("/list")
+    public Map findProductList() {
+        return ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(), productService.findList());
+    }
+
     @PostMapping("/page")
     public Map query(@RequestBody Map<String,String> queryMap) {
         //获取分页信息，并从查询条件中去除

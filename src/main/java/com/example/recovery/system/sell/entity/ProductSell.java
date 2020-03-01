@@ -58,6 +58,12 @@ public class ProductSell implements Serializable {
      * 最小销售单位（粒/包/克）
      */
     private String minUnit;
+    /**
+     * 最小销售单位存量
+     */
+    private String minUnitStock;
+
+    private String stockDate;
 
     /**
      * 采购商
@@ -125,12 +131,28 @@ public class ProductSell implements Serializable {
         this.minPrice = minPrice;
     }
 
+    public String getMinUnitStock() {
+        return minUnitStock;
+    }
+
+    public void setMinUnitStock(String minUnitStock) {
+        this.minUnitStock = minUnitStock;
+    }
+
     public String getMinUnit() {
         return minUnit;
     }
 
     public void setMinUnit(String minUnit) {
         this.minUnit = minUnit;
+    }
+
+    public String getStockDate() {
+        return stockDate;
+    }
+
+    public void setStockDate(String stockDate) {
+        this.stockDate = stockDate;
     }
 
     public String getPurchaser() {

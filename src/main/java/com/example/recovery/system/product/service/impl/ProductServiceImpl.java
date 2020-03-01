@@ -51,11 +51,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     @Override
+    @Transactional
     public Map delete(Integer productId) {
         if (productMapper.findProduct(productId) == null) {
             return  ResponseMap.factoryResult(StatusEnum.RET_NOT_DATA_FOUND.getCode(),StatusEnum.RET_NOT_DATA_FOUND.getData());
         }
         if(productMapper.delete(productId) == 1) {
+            sellMapper.delete(productId);
             return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
         }else {
             return  ResponseMap.factoryResult(StatusEnum.RET_INSERT_FAIL.getCode(),StatusEnum.RET_INSERT_FAIL.getData());
@@ -64,11 +66,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     public Map update(Product product) {
-        QueryWrapper<Product> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("name",product.getName());
-        Product productByName = productMapper.getAll(queryWrapper).get(0);
-        if (productByName.getProductId().equals(product.getProductId())) {
+        Product oldProduct = productMapper.findProduct(product.getProductId());
+        if (oldProduct.getProductId().equals(product.getProductId())) {
             if(productMapper.update(product) == 1) {
+                ProductSell sell = sellMapper.findProduct(product.getProductId());
+                sell.setName(product.getName());
+                sellMapper.update(sell);
                 return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
             }
             return  ResponseMap.factoryResult(StatusEnum.RET_UPDATE_FAIL.getCode(),StatusEnum.RET_UPDATE_FAIL.getData());
@@ -95,6 +98,5 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         QueryWrapper<Product> queryWrapper = PageUtil.getQueryWrapper(queryMap);
         return productMapper.getAll(queryWrapper);
     }
-
 
 }

@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.recovery.framework.entity.ResponseMap;
 import com.example.recovery.framework.entity.StatusEnum;
 import com.example.recovery.framework.util.PageUtil;
+import com.example.recovery.system.product.service.IProductService;
 import com.example.recovery.system.sell.entity.ProductSell;
 import com.example.recovery.system.sell.mapper.ProductSellMapper;
 import com.example.recovery.system.sell.service.IProductSellService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +26,9 @@ import java.util.Map;
  */
 @Service
 public class ProductSellServiceImpl extends ServiceImpl<ProductSellMapper, ProductSell> implements IProductSellService {
+
+    @Autowired
+    IProductService productService;
 
     @Resource
     ProductSellMapper sellMapper;
@@ -43,14 +48,7 @@ public class ProductSellServiceImpl extends ServiceImpl<ProductSellMapper, Produ
 
     @Override
     public Map delete(Integer productId) {
-        if (sellMapper.findProduct(productId) == null) {
-            return  ResponseMap.factoryResult(StatusEnum.RET_NOT_DATA_FOUND.getCode(),StatusEnum.RET_NOT_DATA_FOUND.getData());
-        }
-        if(sellMapper.delete(productId) == 1) {
-            return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
-        }else {
-            return  ResponseMap.factoryResult(StatusEnum.RET_INSERT_FAIL.getCode(),StatusEnum.RET_INSERT_FAIL.getData());
-        }
+        return productService.delete(productId);
     }
 
     @Override

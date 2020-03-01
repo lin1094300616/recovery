@@ -27,35 +27,33 @@ public interface ProductSellMapper extends BaseMapper<ProductSell> {
     @Select("select * from product_sell ${ew.customSqlSegment}")
     List<ProductSell> getAll(@Param(Constants.WRAPPER) QueryWrapper wrapper);
 
-    @Select("select product_id, purchase_price, price, stock, unit, min_price, " +
-            "min_unit, purchaser, purchaser_phone " +
+    @Select("select * " +
             "from product_sell " +
             "where name = #{name}")
     ProductSell findProductByname(@Param("name") String name);
 
     @Insert("INSERT INTO `product_sell` VALUES (#{productId}, #{name}, #{purchasePrice}, #{price}, #{stock}, " +
-            "#{unit}, #{minPrice}, #{minUnit}, #{purchaser}, " +
+            "#{unit}, #{minPrice}, #{minUnitStock}, #{minUnit}, #{stockDate}, #{purchaser}, " +
             "#{purchaserPhone} )")
     @Options(useGeneratedKeys = true, keyColumn = "productId", keyProperty = "productId")
     int add(ProductSell productSell);
 
     @Update("update product_sell set name = #{name}, purchase_price = #{purchasePrice}, price = #{price}, " +
-            "stock = #{stock}, unit = #{unit}, min_price = #{minPrice}, min_unit = #{minUnit}, " +
-            "purchaser = #{purchaser}, purchaser_phone = #{purchaserPhone} " +
+            "stock = #{stock}, unit = #{unit}, min_price = #{minPrice}, min_unit_stock = #{minUnitStock}, " +
+            "min_unit = #{minUnit},stock_date = #{stock_date} purchaser = #{purchaser}, " +
+            "purchaser_phone = #{purchaserPhone} " +
             "where product_id = #{productId} ")
     int update(ProductSell productSell);
 
     @Delete("delete from product_sell where product_id = #{productId}")
     int delete(Integer productId);
 
-    @Select("select product_id, name, purchase_price, price, stock, unit, min_price, " +
-            "min_unit, purchaser, purchaser_phone " +
+    @Select("select * " +
             "from product_sell " +
             "where product_id = #{productId}")
     ProductSell findProduct(@Param("productId") Integer productId);
 
-    @Select("select product_id, name, purchase_price, price, stock, unit, min_price, " +
-            "min_unit, purchaser, purchaser_phone " +
+    @Select("select * " +
             "from product_sell ")
     List<ProductSell> findProductList();
 
