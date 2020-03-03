@@ -24,14 +24,14 @@ public interface EpidemicMapper extends BaseMapper<Epidemic> {
             "from epidemic " +
             "where area_number = #{higherAreaNumber} " +
             "and date = #{date}")
-    Epidemic findEpidemicByAreaNumber(Epidemic epidemic);
+    Epidemic findEpidemicByAreaNumberAndDate(Epidemic epidemic);
 
     /**
      * 条件构造器查询
      * @param wrapper
      * @return
      */
-    @Select("select *, from epidemic ${ew.customSqlSegment}")
+    @Select("select * from epidemic ${ew.customSqlSegment}")
     List<Epidemic> getAll(@Param(Constants.WRAPPER) QueryWrapper wrapper);
 
     @Update("update epidemic set confirmed = confirmed + #{confirmed}, suspected = suspected + #{suspected}, " +
