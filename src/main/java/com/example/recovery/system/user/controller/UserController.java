@@ -34,11 +34,11 @@ public class UserController {
 
     @PostMapping("/login")
     public Map login(@RequestBody User user, HttpSession session) {
-        if (CommUtil.isNullString(user.getName(),user.getPassword())) {
+        if (CommUtil.isNullString(user.getUserName(),user.getPassword())) {
             return ResponseMap.factoryResult(StatusEnum.SYSTEM_ERROR_9002.getCode(),StatusEnum.SYSTEM_ERROR_9002.getData());
         }
         if (userService.login(user.getUserName(),user.getPassword(),session)) {
-            return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),LOGIN_OK);
+            return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),user);
         }
         return  ResponseMap.factoryResult(StatusEnum.USER_ERROR_1001.getCode(),StatusEnum.USER_ERROR_1001.getData());
     }

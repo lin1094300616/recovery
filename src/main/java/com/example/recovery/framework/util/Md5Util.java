@@ -18,6 +18,7 @@ public class Md5Util {
      */
     public static String transMD5(final String sourceStr) {
         String md5Str = DigestUtils.md5DigestAsHex(sourceStr.getBytes());
+        System.out.println("md5Str = " + md5Str);
         return md5Str;
     }
 

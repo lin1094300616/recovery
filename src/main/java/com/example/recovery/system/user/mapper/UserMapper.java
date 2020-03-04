@@ -14,7 +14,7 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    @Select("select user_id,user_name, name as name, phone, email, role_name " +
+    @Select("select user_id, user_name, password, name, phone, email, role_name " +
             "from user " +
             "where  user_name = #{userName}")
     User findByUserName(@Param("userName") String userName);
