@@ -38,7 +38,7 @@ public interface EpidemicMapper extends BaseMapper<Epidemic> {
             "death = death + #{death}, cured = cured + #{cured} " +
             "where area_number = #{areaNumber} " +
             "and date = #{date} ")
-    int update3(Epidemic epidemic);
+    int cumulative(Epidemic epidemic);
 
     @Update("update epidemic set confirmed = confirmed + #{confirmed}, suspected = suspected + #{suspected}, " +
             "death = death + #{death}, cured = cured + #{cured} " +
@@ -46,7 +46,7 @@ public interface EpidemicMapper extends BaseMapper<Epidemic> {
             "and date = '0' ")
     int update2(Epidemic epidemic);
 
-    @Insert("INSERT INTO epidemic VALUES (#{epidemicId}, #{province}, #{area_number}, #{higher_area_number}， " +
+    @Insert("INSERT INTO epidemic VALUES (#{epidemicId}, #{areaNumber}, #{higherAreaNumber}, #{province}, " +
             "#{date}, #{confirmed}, #{suspected}, #{death}, #{cured})")
     @Options(useGeneratedKeys = true, keyColumn = "epidemicId", keyProperty = "epidemicId")
     int add(Epidemic epidemic);

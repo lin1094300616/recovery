@@ -1,6 +1,7 @@
 package com.example.recovery.system.epidemic.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.recovery.framework.entity.AreaNumber;
 import com.example.recovery.framework.entity.ResponseMap;
 import com.example.recovery.framework.entity.StatusEnum;
 import com.example.recovery.framework.util.PageUtil;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +31,9 @@ public class EpidemicServiceImpl extends ServiceImpl<EpidemicMapper, Epidemic> i
     @Resource
     EpidemicMapper epidemicMapper;
 
+    /**
+     * 静态变量，用于存放每次递归新增或修改的疫情数据
+     */
     static  Epidemic cumulativeEpidemic = new Epidemic();
 
     /**
@@ -43,15 +48,15 @@ public class EpidemicServiceImpl extends ServiceImpl<EpidemicMapper, Epidemic> i
         try{
             if (epidemic.getHigherAreaNumber() == 0){
                 epidemic.setDate("0");
-                epidemicMapper.update3(epidemic);
+                epidemicMapper.cumulative(epidemic);
                 return true;
             }
-            Epidemic updateEpidemic = epidemicMapper.findEpidemicByAreaNumber(epidemic);
+            Epidemic updateEpidemic = epidemicMapper.findEpidemicByAreaNumberAndDate(epidemic);
             updateEpidemic.setConfirmed(cumulativeEpidemic.getConfirmed());
             updateEpidemic.setSuspected(cumulativeEpidemic.getSuspected());
             updateEpidemic.setDeath(cumulativeEpidemic.getDeath());
             updateEpidemic.setCured(cumulativeEpidemic.getCured());
-            epidemicMapper.update3(updateEpidemic);
+            epidemicMapper.cumulative(updateEpidemic);
             return updateArea(updateEpidemic);
         }catch (Exception e) {
             System.out.println("e = " + e);
@@ -73,12 +78,33 @@ public class EpidemicServiceImpl extends ServiceImpl<EpidemicMapper, Epidemic> i
 //    }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Map add(Epidemic epidemic) {
         if((epidemicMapper.add(epidemic) == 1) && (epidemic.getHigherAreaNumber() != 0)) {
-            //添加疫情的情况下，直接使用当前值进行递归调用
-            updateArea(epidemic);
+            //查询上级疫情信息是否存在，存在则修改其数据，反之递归新增
+            if (epidemicMapper.findEpidemicByAreaNumberAndDate(epidemic) == null) {
+
+                //递归新增,未测试
+                epidemic.setAreaNumber(epidemic.getHigherAreaNumber());
+                String areaString = epidemic.getAreaNumber().toString();
+                Map map = AreaNumber.HIGHER_AREA_NUMBER_MAP;
+                epidemic.setHigherAreaNumber((Integer) map.get(areaString));
+                epidemic.setProvince((String) AreaNumber.AREA_NUMBER_MAP.get(areaString));
+                epidemic.setEpidemicId(null);
+                this.add(epidemic);
+            }else {
+                //递归修改
+                cumulativeEpidemic.setConfirmed(epidemic.getConfirmed());
+                cumulativeEpidemic.setSuspected(epidemic.getSuspected());
+                cumulativeEpidemic.setDeath(epidemic.getDeath());
+                cumulativeEpidemic.setCured(epidemic.getCured());
+                updateArea(epidemic);
+                return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
+            }
+            epidemic.setDate("0");
+            epidemicMapper.cumulative(epidemic);
             return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
+
         }else {
             return  ResponseMap.factoryResult(StatusEnum.RET_INSERT_FAIL.getCode(),StatusEnum.RET_INSERT_FAIL.getData());
         }

@@ -39,7 +39,7 @@ public class EpidemicController {
         Map<String,String> queryMap = new HashMap<>(2);
         queryMap.put("date",epidemic.getDate());
         List<Epidemic> epidemicByDate = epidemicService.findAll(queryMap);
-        if (epidemicByDate != null || !epidemicByDate.isEmpty()) {
+        if (!epidemicByDate.isEmpty()) {
             return ResponseMap.factoryResult(StatusEnum.RET_INSERT_EXIST.getCode(),StatusEnum.RET_INSERT_EXIST.getData());
         }
         if (epidemic.getDate().compareTo(CommUtil.dateToString(new Date())) > 0) {
