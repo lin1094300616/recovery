@@ -38,6 +38,7 @@ public class EpidemicController {
     public Map postEpidemic(@RequestBody Epidemic epidemic) {
         Map<String,String> queryMap = new HashMap<>(2);
         queryMap.put("date",epidemic.getDate());
+        queryMap.put("province",epidemic.getProvince());
         List<Epidemic> epidemicByDate = epidemicService.findAll(queryMap);
         if (!epidemicByDate.isEmpty()) {
             return ResponseMap.factoryResult(StatusEnum.RET_INSERT_EXIST.getCode(),StatusEnum.RET_INSERT_EXIST.getData());
