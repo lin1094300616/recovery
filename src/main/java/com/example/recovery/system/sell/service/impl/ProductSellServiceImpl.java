@@ -33,24 +33,6 @@ public class ProductSellServiceImpl extends ServiceImpl<ProductSellMapper, Produ
     @Resource
     ProductSellMapper sellMapper;
 
-//    @Override
-//    public Map add(ProductSell productSell) {
-//        ProductSell productByName = sellMapper.findProductByname(productSell.getName());
-//
-//        if (productByName == null || productByName.getProductId().equals(productSell.getProductId())) {
-//            if(sellMapper.add(productSell) == 1) {
-//                return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
-//            }
-//            return  ResponseMap.factoryResult(StatusEnum.RET_INSERT_FAIL.getCode(),StatusEnum.RET_INSERT_FAIL.getData());
-//        }
-//        return  ResponseMap.factoryResult(StatusEnum.RET_INSERT_EXIST.getCode(),StatusEnum.RET_INSERT_EXIST.getData());
-//    }
-//
-//    @Override
-//    public Map delete(Integer productId) {
-//        return productService.delete(productId);
-//    }
-
     @Override
     public Map update(ProductSell productSell) {
         ProductSell sellByName = sellMapper.findProductByname(productSell.getName());

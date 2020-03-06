@@ -1,6 +1,8 @@
 package com.example.recovery.system.user.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.example.recovery.system.user.entity.User;
 import org.apache.ibatis.annotations.*;
 
@@ -14,7 +16,15 @@ import java.util.List;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-    @Select("select user_id, user_name, password, name, phone, email, role_name " +
+    /**
+     * 条件构造器查询
+     * @param wrapper
+     * @return
+     */
+    @Select("select * from user ${ew.customSqlSegment}")
+    List<User> getAll(@Param(Constants.WRAPPER) QueryWrapper wrapper);
+
+    @Select("select * " +
             "from user " +
             "where  user_name = #{userName}")
     User findByUserName(@Param("userName") String userName);

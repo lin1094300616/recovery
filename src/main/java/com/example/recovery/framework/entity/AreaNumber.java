@@ -44,17 +44,5 @@ public class AreaNumber {
         HIGHER_AREA_NUMBER_MAP.put("350900",350000);
     }
 
-//    public final static Map<String,String> mapArea = new HashMap() {{
-//        put("350000","福建省");
-//        put("350100","福州市");
-//        put("350200","厦门市");
-//        put("350300","莆田市");
-//        put("350400","三明市");
-//        put("350500","泉州市");
-//        put("350600","漳州市");
-//        put("350700","南平市");
-//        put("350800","龙岩市");
-//        put("350900","宁德市");
-//    }};
 
 }

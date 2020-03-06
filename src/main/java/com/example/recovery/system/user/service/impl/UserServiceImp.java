@@ -1,8 +1,10 @@
 package com.example.recovery.system.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.recovery.framework.entity.ResponseMap;
 import com.example.recovery.framework.entity.StatusEnum;
 import com.example.recovery.framework.util.Md5Util;
+import com.example.recovery.framework.util.PageUtil;
 import com.example.recovery.system.user.entity.User;
 import com.example.recovery.system.user.mapper.UserMapper;
 import com.example.recovery.system.user.service.UserService;
@@ -25,16 +27,14 @@ public class UserServiceImp implements UserService {
     private UserMapper userMapper;
 
     @Override
-    public boolean login(String userName, String password, HttpSession session) {
+    public Map login(String userName, String password, HttpSession session) {
         User user = userMapper.findByUserName(userName);
-        if (user == null) {
-            return  false;
+        if (user == null || !user.getPassword().equals(Md5Util.transMD5(userName + password))) {
+            return  ResponseMap.factoryResult(StatusEnum.USER_ERROR_1001.getCode(),StatusEnum.USER_ERROR_1001.getData());
         }
-        if (!user.getPassword().equals(Md5Util.transMD5(userName + password))) {
-            return false;
-        }
+        user.setPassword(null);
         session.setAttribute("user",user);
-        return true;
+        return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),user);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UserServiceImp implements UserService {
         if (userMapper.findByUserName(user.getUserName()) != null) {
             return  ResponseMap.factoryResult(StatusEnum.RET_INSERT_EXIST.getCode(),StatusEnum.RET_INSERT_EXIST.getData());
         }
-        /**获得MD5加密密码   Epidemic   确诊  疑似  死亡  治愈**/
+        /**获得MD5加密密码**/
         String md5Password = Md5Util.transMD5(user.getUserName() + user.getPassword());
         user.setPassword(md5Password);
         if(userMapper.add(user) == 1) {
@@ -86,5 +86,11 @@ public class UserServiceImp implements UserService {
     @Override
     public List<User> findUserList() {
         return userMapper.findUserList();
+    }
+
+    @Override
+    public List<User> findWrapper(Map<String, String> queryMap) {
+        QueryWrapper<User> queryWrapper = PageUtil.getQueryWrapper(queryMap);
+        return userMapper.getAll(queryWrapper);
     }
 }

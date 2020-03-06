@@ -37,10 +37,7 @@ public class UserController {
         if (CommUtil.isNullString(user.getUserName(),user.getPassword())) {
             return ResponseMap.factoryResult(StatusEnum.SYSTEM_ERROR_9002.getCode(),StatusEnum.SYSTEM_ERROR_9002.getData());
         }
-        if (userService.login(user.getUserName(),user.getPassword(),session)) {
-            return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),user);
-        }
-        return  ResponseMap.factoryResult(StatusEnum.USER_ERROR_1001.getCode(),StatusEnum.USER_ERROR_1001.getData());
+        return userService.login(user.getUserName(), user.getPassword(), session);
     }
 
     @PostMapping("/loginOut")
@@ -88,24 +85,21 @@ public class UserController {
         return ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(), userList);
     }
 
-    @RequestMapping(value = "/list2", method = RequestMethod.GET)
-    public Map getUsers2() {
-        List<User> userList = userService.findUserList();
-
-        if ((userList == null) || userList.isEmpty()) {
-            return ResponseMap.factoryResult(StatusEnum.RET_NOT_DATA_FOUND.getCode(), StatusEnum.RET_NOT_DATA_FOUND.getData());
-        }else {
-            return ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(), userList);
-        }
-    }
-
     @PostMapping("/page")
-    public Map findByPage(@RequestParam(value = "page") Integer page,
-                          @RequestParam(value = "size") Integer size) {
-        //分页并查询
-        Page<User> pageInfo = PageHelper.startPage(page, size);
-        List<User> users = userService.findUserList();
+    public Map findByPage(@RequestBody Map<String,String> queryMap) {
+        //获取分页信息，并从查询条件中去除
+        Integer page = Integer.valueOf(queryMap.get("page"));
+        Integer size = Integer.valueOf(queryMap.get("size"));
+        queryMap.remove("page");
+        queryMap.remove("size");
+
+        Page<User> pageInfo = PageHelper.startPage(page,size);
+        List<User> epidemics = userService.findWrapper(queryMap);
         JSONObject result = PageUtil.pageBaseInfo(pageInfo);
-        return ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(), users, result);
+        return ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(), epidemics, result);
+
+
     }
+
+
 }
