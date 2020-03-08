@@ -36,6 +36,9 @@ public class EpidemicController {
 
     @PostMapping
     public Map postEpidemic(@RequestBody Epidemic epidemic) {
+        if (CommUtil.isNullValue(epidemic.getAreaNumber(),epidemic.getHigherAreaNumber())) {
+            return ResponseMap.factoryResult(StatusEnum.SYSTEM_ERROR_9002.getCode(),StatusEnum.SYSTEM_ERROR_9002.getData());
+        }
         Map<String,String> queryMap = new HashMap<>(2);
         queryMap.put("date",epidemic.getDate());
         queryMap.put("province",epidemic.getProvince());
@@ -58,16 +61,6 @@ public class EpidemicController {
     public Map getEpidemicById(@PathVariable("epidemicId") Integer epidemicId) {
         return epidemicService.findEpidemic(epidemicId);
     }
-
-//    @GetMapping("/page")
-//    public Map findByPage(@RequestParam(value = "page") Integer page,
-//                          @RequestParam(value = "size") Integer size) {
-//        //分页并查询
-//        Page<Epidemic> pageInfo = PageHelper.startPage(page, size);
-//        List<Epidemic> epidemics = epidemicService.findEpidemicList();
-//        JSONObject result = PageUtil.pageBaseInfo(pageInfo);
-//        return ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(), epidemics, result);
-//    }
 
     @PostMapping("/page")
     public Map query(@RequestBody Map<String,String> queryMap) {

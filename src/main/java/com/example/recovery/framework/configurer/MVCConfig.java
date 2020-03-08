@@ -1,5 +1,8 @@
 package com.example.recovery.framework.configurer;
 
+import com.example.recovery.framework.interceptor.LoginInterceptor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -22,18 +25,18 @@ public class MVCConfig extends WebMvcConfigurerAdapter {
      **/
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(loginInterceptor())
-//                .excludePathPatterns("/static/*")
-//                .excludePathPatterns("/error")
-//                .excludePathPatterns("/login")
-//                .excludePathPatterns("/loginOut")
-//                .excludePathPatterns("/register")
-//                .excludePathPatterns("/test")//默认不拦截路径
-//                .addPathPatterns("/**"); //拦截所有路径
+        registry.addInterceptor(loginInterceptor())
+                .excludePathPatterns("/static/*")
+                .excludePathPatterns("/error")
+                .excludePathPatterns("/login")
+                .excludePathPatterns("/loginOut")
+                .excludePathPatterns("/register")
+                .excludePathPatterns("/test")//默认不拦截路径
+                .addPathPatterns("/**"); //拦截所有路径
     }
 
-//    @Bean
-//    public LoginInterceptor loginInterceptor() {
-//        return new LoginInterceptor();
-//    }
+    @Bean
+    public LoginInterceptor loginInterceptor() {
+        return new LoginInterceptor();
+    }
 }

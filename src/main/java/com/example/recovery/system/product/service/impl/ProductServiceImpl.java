@@ -3,6 +3,7 @@ package com.example.recovery.system.product.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.recovery.framework.entity.ResponseMap;
 import com.example.recovery.framework.entity.StatusEnum;
+import com.example.recovery.framework.util.CommUtil;
 import com.example.recovery.framework.util.PageUtil;
 import com.example.recovery.system.product.entity.Product;
 import com.example.recovery.system.product.mapper.ProductMapper;
@@ -37,7 +38,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     @Transactional
     public Map add(Product product) {
-
         Product productByName = productMapper.findProductByName(product.getName());
         if (productByName == null || productByName.getProductId().equals(product.getProductId())) {
             if(productMapper.add(product) == 1) {
