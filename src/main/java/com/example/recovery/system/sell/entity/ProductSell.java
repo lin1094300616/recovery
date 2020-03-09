@@ -63,6 +63,8 @@ public class ProductSell implements Serializable {
      */
     private String minUnitStock;
 
+    private Integer specification;
+
     private String stockDate;
 
     /**
@@ -171,5 +173,11 @@ public class ProductSell implements Serializable {
         this.purchaserPhone = purchaserPhone;
     }
 
+    public Integer getSpecification() {
+        return specification;
+    }
 
+    public void setSpecification(Integer specification) {
+        this.specification = specification;
+    }
 }

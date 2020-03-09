@@ -38,15 +38,15 @@ public interface ProductSellMapper extends BaseMapper<ProductSell> {
     ProductSell findProductByname(@Param("name") String name);
 
     @Insert("INSERT INTO `product_sell` VALUES (#{productId}, #{name}, #{purchasePrice}, #{price}, #{stock}, " +
-            "#{unit}, #{minPrice}, #{minUnitStock}, #{minUnit}, #{stockDate}, #{purchaser}, " +
+            "#{unit}, #{minPrice}, #{minUnitStock}, #{minUnit}, #{specification}, #{stockDate}, #{purchaser}, " +
             "#{purchaserPhone} )")
     @Options(useGeneratedKeys = true, keyColumn = "productId", keyProperty = "productId")
     int add(ProductSell productSell);
 
     @Update("update product_sell set name = #{name}, purchase_price = #{purchasePrice}, price = #{price}, " +
             "stock = #{stock}, unit = #{unit}, min_price = #{minPrice}, min_unit_stock = #{minUnitStock}, " +
-            "min_unit = #{minUnit},stock_date = #{stockDate}, purchaser = #{purchaser}, " +
-            "purchaser_phone = #{purchaserPhone} " +
+            "min_unit = #{minUnit}, specification = #{specification}, stock_date = #{stockDate}, " +
+            "purchaser = #{purchaser}, purchaser_phone = #{purchaserPhone} " +
             "where product_id = #{productId} ")
     int update(ProductSell productSell);
 
