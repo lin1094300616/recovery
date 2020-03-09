@@ -2,7 +2,6 @@ package com.example.recovery.framework.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.example.recovery.system.epidemic.entity.Epidemic;
 import com.github.pagehelper.Page;
 
 import java.util.Map;
@@ -23,7 +22,7 @@ public class PageUtil {
      */
     public static QueryWrapper getQueryWrapper(Map<String, String> queryMap) {
         //构建Mybatis 条件构造器
-        QueryWrapper<Epidemic> queryWrapper = new QueryWrapper<>();
+        QueryWrapper queryWrapper = new QueryWrapper<>();
         //遍历查询条件Map， page和size 在controller 层已经去除，剩下的都是查询条件
         for(Map.Entry<String, String> entry : queryMap.entrySet()){
             String mapKey = entry.getKey();
