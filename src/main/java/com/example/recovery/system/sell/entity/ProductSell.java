@@ -61,7 +61,7 @@ public class ProductSell implements Serializable {
     /**
      * 最小销售单位存量
      */
-    private String minUnitStock;
+    private Integer minUnitStock;
 
     private Integer specification;
 
@@ -133,11 +133,11 @@ public class ProductSell implements Serializable {
         this.minPrice = minPrice;
     }
 
-    public String getMinUnitStock() {
+    public Integer getMinUnitStock() {
         return minUnitStock;
     }
 
-    public void setMinUnitStock(String minUnitStock) {
+    public void setMinUnitStock(Integer minUnitStock) {
         this.minUnitStock = minUnitStock;
     }
 

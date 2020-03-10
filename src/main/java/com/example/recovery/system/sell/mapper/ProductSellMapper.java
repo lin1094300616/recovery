@@ -19,10 +19,9 @@ import java.util.List;
 @Mapper
 public interface ProductSellMapper extends BaseMapper<ProductSell> {
 
-    @Select("select COUNT(1) FROM product_sell " +
-            "WHERE product_id = #{productId} " +
-            "and (stock > #{stock} OR (stock = #{stock} and min_unit_stock >= #{minStock}))")
-    int checkStock(@Param("productId")Integer productId, @Param("stock")Integer stock, @Param("minStock")Integer minStock);
+    @Update("update product_sell set stock = stock - #{stock}, min_unit_stock = min_unit_stock - #{minUnitStock} " +
+            "where product_id = #{productId} ")
+    int decreaseStock(@Param("stock") Integer stock, @Param("minUnitStock") Integer minUnitStock, @Param("productId") Integer productId);
 
     /**
      * 条件构造器查询

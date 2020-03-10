@@ -40,48 +40,27 @@ public class ConsultationServiceImpl extends ServiceImpl<ConsultationMapper, Con
     @Resource
     ProductSellMapper sellMapper;
 
-    List<ProductSell> productSellList;
-
     Float price = 0.0f;
-
-    public void load(SortedSet<Prescription> prescriptionList) {
-        List<Integer> idList = new ArrayList<>();
-        for (Prescription prescription : prescriptionList) {
-            idList.add(prescription.getProductId());
-        }
-        QueryWrapper<ProductSell> queryWrapper = new QueryWrapper<>();
-        queryWrapper.in("product_id",idList);
-        queryWrapper.orderByAsc("product_id");
-        productSellList = sellMapper.getAll(queryWrapper);
-    }
 
     @Override
     public Map check(Consultation consultation) {
         //校验药品是否充裕
         for (Prescription prescription : consultation.getPrescription()) {
-            if (sellMapper.checkStock(
-                    prescription.getProductId(),
-                    prescription.getStock(),
-                    prescription.getMinUnitStock()) <= 0) {
-                return  ResponseMap.factoryResult(StatusEnum.Product_1001.getCode(),prescription.getName() + StatusEnum.Product_1001.getData());
+            ProductSell product = sellMapper.findProduct(prescription.getProductId());
+
+            //如果盒装存量等于盒装购买量 并且 最小单位存量小于购买最小单位购买量
+            if ((product.getStock().equals(prescription.getStock())) &&
+                    (product.getMinUnitStock() < prescription.getMinUnitStock())) {
+                return ResponseMap.factoryResult(StatusEnum.Product_1001.getCode(), prescription.getName() + StatusEnum.Product_1001.getData());
+            } else if (product.getStock() < prescription.getStock()) {
+                //如果盒装存量小于盒装购买量
+                return ResponseMap.factoryResult(StatusEnum.Product_1001.getCode(), prescription.getName() + StatusEnum.Product_1001.getData());
             }
-        }
-        /**
-         * 药品充裕，进行计算
-         * sortList 获得购买量，
-         * productList 获得价格，计算，累加
-         */
-        SortedSet<Prescription> sortedSet = consultation.getPrescription();
-        load(sortedSet);
-        int subscript = 0;
-        for (Prescription prescription : sortedSet) {
-            ProductSell productSell = productSellList.get(subscript);
             int stock = prescription.getStock();
             int unitStock = prescription.getMinUnitStock();
-            price = price + (stock * productSell.getPrice() + unitStock * productSell.getMinPrice());
-            consultation.setTotalPrice(price);
-            subscript++;
+            price = price + (stock * product.getPrice() + unitStock * product.getMinPrice());
         }
+        consultation.setTotalPrice(price);
         return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),consultation);
     }
 
@@ -89,11 +68,12 @@ public class ConsultationServiceImpl extends ServiceImpl<ConsultationMapper, Con
     @Transactional(rollbackFor = Exception.class)
     public Map add(Consultation consultation) {
         if(consultationMapper.add(consultation) == 1) {
-            SortedSet<Prescription> prescriptionList = consultation.getPrescription();
+            List<Prescription> prescriptionList =  consultation.getPrescription();
             if (!prescriptionList.isEmpty()) {
                 for (Prescription prescription : prescriptionList) {
                     prescription.setConsultationId(consultation.getConsultationId());
                     prescriptionMapper.add(prescription);
+                    sellMapper.decreaseStock(prescription.getStock(), prescription.getMinUnitStock(), prescription.getProductId());
                 }
             }
             return  ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(),StatusEnum.RESPONSE_OK.getData());
@@ -118,7 +98,7 @@ public class ConsultationServiceImpl extends ServiceImpl<ConsultationMapper, Con
     @Override
     public Map update(Consultation consultation) {
         if(consultationMapper.update(consultation) == 1) {
-            SortedSet<Prescription> prescriptionList = consultation.getPrescription();
+            List<Prescription> prescriptionList = consultation.getPrescription();
             if (!prescriptionList.isEmpty()) {
                 for (Prescription prescription : prescriptionList) {
                     prescriptionMapper.update(prescription);
@@ -133,6 +113,11 @@ public class ConsultationServiceImpl extends ServiceImpl<ConsultationMapper, Con
     public Map findById(Integer consultationId) {
         Consultation consultation = consultationMapper.findConsultation(consultationId);
         if (consultation != null) {
+            Map<String, String> queryMap = new HashMap<>(2);
+            queryMap.put("consultation_id",consultationId.toString());
+            QueryWrapper<Product> queryWrapper = PageUtil.getQueryWrapper(queryMap);
+            List<Prescription> prescriptionList =  prescriptionMapper.getAll(queryWrapper);
+            consultation.setPrescription(prescriptionList);
             return ResponseMap.factoryResult(StatusEnum.RESPONSE_OK.getCode(), consultation);
         }
         return ResponseMap.factoryResult(StatusEnum.RET_NOT_DATA_FOUND.getCode(), StatusEnum.RET_NOT_DATA_FOUND.getData());

@@ -53,7 +53,8 @@ public interface ConsultationMapper extends BaseMapper<Consultation> {
             "where consultation_id = #{consultationId}")
     Consultation findConsultation(@Param("consultationId") Integer consultationId);
 
-    @Select("select *" +
-            "from consultation ")
+    @Select("select a.*, b.name as name " +
+            "from consultation a, patient b " +
+            "WHERE a.patient_id = b.patient_id")
     List<Consultation> findConsultationList();
 }

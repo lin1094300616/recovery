@@ -3,6 +3,7 @@ package com.example.recovery.system.consultation.entity;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -61,7 +62,9 @@ public class Consultation implements Serializable {
     /**
      * 药方
      */
-    private SortedSet<Prescription> prescription;
+    private List<Prescription> prescription;
+
+    private String name;
 
     public Integer getConsultationId() {
         return consultationId;
@@ -111,11 +114,19 @@ public class Consultation implements Serializable {
         TotalPrice = totalPrice;
     }
 
-    public SortedSet<Prescription> getPrescription() {
+    public List<Prescription> getPrescription() {
         return prescription;
     }
 
-    public void setPrescription(SortedSet<Prescription> prescription) {
+    public void setPrescription(List<Prescription> prescription) {
         this.prescription = prescription;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
