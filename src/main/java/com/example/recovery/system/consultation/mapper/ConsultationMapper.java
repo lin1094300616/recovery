@@ -48,9 +48,10 @@ public interface ConsultationMapper extends BaseMapper<Consultation> {
     @Delete("delete from consultation where consultation_id = #{consultationId}")
     int delete(Integer consultationId);
 
-    @Select("select *" +
-            "from consultation " +
-            "where consultation_id = #{consultationId}")
+    @Select("select a.*, b.name as name " +
+            "from consultation a, patient b " +
+            "where consultation_id = #{consultationId}" +
+            "and a.patient_id = b.patient_id ")
     Consultation findConsultation(@Param("consultationId") Integer consultationId);
 
     @Select("select a.*, b.name as name " +
