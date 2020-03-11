@@ -19,7 +19,7 @@ import java.util.List;
 @Mapper
 public interface ConsultationMapper extends BaseMapper<Consultation> {
 
-    @Delete("delete from consultation where patient_id = #{patientId}")
+    @Delete("delete from consultation where patient_id = #{patientId} ")
     int deleteByPatient(Integer patientId);
 
     /**
