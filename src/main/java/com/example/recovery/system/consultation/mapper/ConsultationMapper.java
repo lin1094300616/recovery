@@ -28,7 +28,16 @@ public interface ConsultationMapper extends BaseMapper<Consultation> {
      * @return
      */
     @Select("select * from consultation ${ew.customSqlSegment}")
+    @Results({
+
+            @Result(property = "patient", column = "patient_id",
+                    one = @One(select = "com.example.recovery.system.patient.mapper.PatientMapper.findPatientNameById")),
+            @Result(property = "prescription", column = "consultation_id",
+                    many = @Many(select = "com.example.recovery.system.prescription.mapper.PrescriptionMapper.findPrescriptionByConsultationId"))}
+    )
     List<Consultation> getAll(@Param(Constants.WRAPPER) QueryWrapper wrapper);
+
+
 
     @Select("select * " +
             "from consultation " +
@@ -57,5 +66,11 @@ public interface ConsultationMapper extends BaseMapper<Consultation> {
     @Select("select a.*, b.name as name " +
             "from consultation a, patient b " +
             "WHERE a.patient_id = b.patient_id")
+    @Results({
+            @Result(property = "prescription", column = "consultation_id",
+                    many = @Many(select = "com.example.recovery.system.prescription.mapper.PrescriptionMapper.findPrescriptionByConsultationId"))}
+    )
+    // 对userId进行赋值
+//    @Result(property = "id", column = "id")
     List<Consultation> findConsultationList();
 }

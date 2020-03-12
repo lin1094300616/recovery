@@ -1,6 +1,8 @@
 package com.example.recovery;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.example.recovery.framework.util.CommUtil;
+import com.example.recovery.framework.util.PageUtil;
 import com.example.recovery.system.consultation.service.IConsultationService;
 import com.example.recovery.system.consultation.service.impl.ConsultationServiceImpl;
 import com.example.recovery.system.epidemic.entity.Epidemic;
@@ -35,25 +37,8 @@ public class RecoveryApplicationTests {
 //        queryMap.put("date","2020-02-28");
 //        List<Epidemic> epidemicByDate = epidemicService.findAll(queryMap);
 //        System.out.println("epidemicByDate = " + epidemicByDate.get(0));
-
-        List<Prescription> prescriptionList = new ArrayList<>();
-
-        Prescription prescription = new Prescription();
-        prescription.setProductId(10016);
-        prescriptionList.add(prescription);
-
-        Prescription prescription1 = new Prescription();
-        prescription1.setProductId(10014);
-
-        prescriptionList.add(prescription1);
-//        service.load(prescriptionList);
-
-        TreeSet<Prescription> prescriptionSortedSet = new TreeSet();
-        prescriptionSortedSet.add(prescription);
-        prescriptionSortedSet.add(prescription1);
-        for (Prescription prescription2 : prescriptionSortedSet) {
-            System.out.println("prescription2 = " + prescription2);
-        }
+        Map<String, String> queryMap = new HashMap<>();
+        QueryWrapper queryWrapper = PageUtil.getQueryWrapper(queryMap);
     }
 
 }

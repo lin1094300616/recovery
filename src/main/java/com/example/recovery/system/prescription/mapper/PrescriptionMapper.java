@@ -27,6 +27,11 @@ public interface PrescriptionMapper extends BaseMapper<Prescription> {
     @Select("select * from prescription ${ew.customSqlSegment}")
     List<Prescription> getAll(@Param(Constants.WRAPPER) QueryWrapper wrapper);
 
+    @Select("select * " +
+            "from prescription " +
+            "where consultation_id = #{consultationId}")
+    List<Prescription> findPrescriptionByConsultationId(Integer consultationId);
+
     @Insert("INSERT INTO `prescription` VALUES (#{prescriptionId}, #{consultationId}, #{productId}, #{name}, " +
             "#{stock}, #{minUnitStock} )")
     @Options(useGeneratedKeys = true, keyColumn = "prescriptionId", keyProperty = "prescriptionId")

@@ -125,6 +125,8 @@ public class ConsultationServiceImpl extends ServiceImpl<ConsultationMapper, Con
 
     @Override
     public List<Consultation> findList() {
+        List<Prescription> prescriptionByConsultationId = prescriptionMapper.findPrescriptionByConsultationId(1);
+        System.out.println("prescriptionByConsultationId = " + prescriptionByConsultationId);
         return consultationMapper.findConsultationList();
     }
 

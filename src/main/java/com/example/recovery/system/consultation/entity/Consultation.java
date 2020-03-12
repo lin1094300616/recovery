@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 
+import com.example.recovery.system.patient.entity.Patient;
 import com.example.recovery.system.prescription.entity.Prescription;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -64,7 +65,17 @@ public class Consultation implements Serializable {
      */
     private List<Prescription> prescription;
 
-    private String name;
+//    private String name;
+
+    private Patient patient;
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
 
     public Integer getConsultationId() {
         return consultationId;
@@ -122,11 +133,11 @@ public class Consultation implements Serializable {
         this.prescription = prescription;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+//    public String getName() {
+//        return name;
+//    }
+//
+//    public void setName(String name) {
+//        this.name = name;
+//    }
 }
